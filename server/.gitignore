@@ -1,0 +1,15 @@
+build/
+out/
+
+.gradle/
+.idea/
+
+gradle/
+gradlew
+gradlew.bat
+
+database/
+exports/
+src/main/resources/web/
+
+*.log*
