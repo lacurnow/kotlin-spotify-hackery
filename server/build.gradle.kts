@@ -41,7 +41,8 @@ dependencies {
     // Persistence
     implementation("com.github.seratch:kotliquery:1.1.5")
     implementation("com.zaxxer:HikariCP:2.7.6")
-    implementation("com.h2database:h2:2.1.214")
+    implementation("org.flywaydb:flyway-core:9.20.0")
+    implementation("org.postgresql:postgresql:42.6.0")
 
     // Config
     implementation("io.github.config4k:config4k:0.6.0")
@@ -57,4 +58,5 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:3.0.7")
     testImplementation("com.willowtreeapps.assertk:assertk:0.9")
     testImplementation("io.mockk:mockk:1.13.7")
+    testImplementation("org.testcontainers:postgresql:1.19.1")
 }
