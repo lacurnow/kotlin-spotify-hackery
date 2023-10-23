@@ -1,10 +1,12 @@
 package org.starter
 
 import io.ktor.server.application.*
-import org.starter.apps.ComponentRegistry
+import org.starter.persistence.TrackDAO
+import org.starter.persistence.TracksDB
 import org.starter.plugins.configureContentNegotation
 import org.starter.plugins.configureHTTP
 import org.starter.plugins.configureRouting
+import org.starter.services.TrackService
 import org.starter.utils.ConfigUtils.loadConfig
 
 fun main(args: Array<String>): Unit =
@@ -15,9 +17,11 @@ fun Application.module() {
     val appEnvironment = environment.config.propertyOrNull("app.environment")?.getString()
 
     val appConfig = loadConfig(appEnvironment)
-    val componentRegistry = ComponentRegistry(appConfig)
+
+    TracksDB.createBlankDatabase()
+    val trackService = TrackService(TrackDAO(TracksDB.name))
 
     configureHTTP()
-    configureRouting(componentRegistry)
+    configureRouting(trackService)
     configureContentNegotation()
 }

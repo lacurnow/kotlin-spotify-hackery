@@ -13,24 +13,26 @@ class TrackDAO(private val name: String) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
+    private var tracks: List<Track> = listOf()
+
     fun createTrack(track: Track): Track {
         if (track.id != null) {
-            throw IllegalArgumentException("Attempting to create a track which already has an id ${track}")
+            throw IllegalArgumentException("Attempting to create a track which already has an id $track")
         }
 
         val id = UUID.randomUUID().toString()
 
         return using(sessionOf(HikariCP.dataSource(name))) { session ->
             val sql = """
-                INSERT INTO tracks
+                INSERT INTO $name
                   (id, track_name, artist_name, streams)
                 VALUES
                   (?, ?, ?, ?)
             """.trimIndent()
 
-            val (_, description) = track
+            val (_, track_name, artist_name, streams) = track
 
-            session.run(queryOf(sql, id, description).asUpdate)
+            session.run(queryOf(sql, id, track_name, artist_name, streams).asUpdate)
 
             logger.info("Created track $track with ID $id")
 
@@ -43,7 +45,7 @@ class TrackDAO(private val name: String) {
             val sql = """
                 SELECT
                     *
-                FROM tracks
+                FROM $name
             """.trimIndent()
 
             session.run(queryOf(sql).map { extractTrack(it) }.asList)
